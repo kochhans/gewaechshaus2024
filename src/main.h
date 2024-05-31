@@ -21,7 +21,7 @@
 /***********************************************************
     Pinbelegung/Sensortyp/Serveradresse definieren
 ************************************************************/
-#define LED_ONBOARD 2
+
 
 /* Pins alt
 
@@ -41,28 +41,42 @@
 
 //Pins neu:
 //EINGABEN
-#define SCHALTER 35 // Schalter Hand/Automatik
-#define S1AUF 32   // Taste
-#define S1ZU 33    // Taste
-#define S2AUF 25   // Taste
-#define S2ZU 26    // Taste
+#define SCHALTER 34 // Schalter Hand/Automatik
+#define S1AUF 26   // Taste
+#define S1ZU 25    // Taste
+#define S2AUF 33   // Taste
+#define S2ZU 35    // Taste
 
-#define MOTOR1PLUS 4 // Steuerung der H-Brücke
-#define MOTOR1MINUS 5
-#define MOTOR2PLUS 18
-#define MOTOR2MINUS 19
-#define SEGMENTG 2
+//AUSGABEN
+#define MOTOR1PLUS 2 // Steuerung der H-Brücke
+#define MOTOR1MINUS 4
+#define MOTOR2PLUS 5
+#define MOTOR2MINUS 18
 
+#define OUTD0 2
+#define OUTD1 4
+#define OUTD2 5
+#define OUTD3 18
+#define OUTD4 19
+#define OUTD5 23
+#define OUTD6 27
 
+#define SEGMENTA 2
+#define SEGMENTB 4
+#define SEGMENTC 5
+#define SEGMENTD 18
+#define SEGMENTE 19
+#define SEGMENTF 23
+#define SEGMENTG 27
 
-#define ONE_WIRE_BUS 34 // 1Wire für Temperatursensor
+#define LED_ONBOARD 2
+
+//BUSSE 
+#define ONE_WIRE_BUS 32 // 1Wire für Temperatursensor
 #define SPIMOSI 12
 #define SPIMISO 13
 #define SPICS 15
 #define SPICLK 14
-
-// DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
-// LedControl lc = LedControl(13, 14, 15, 1);
 
 
 /***********************************************************

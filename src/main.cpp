@@ -377,6 +377,7 @@ void setup()
   pinMode(MOTOR1MINUS, OUTPUT);
   pinMode(MOTOR2PLUS, OUTPUT);
   pinMode(MOTOR2MINUS, OUTPUT);
+  
 
   pinMode(SCHALTER, INPUT_PULLUP);
 
