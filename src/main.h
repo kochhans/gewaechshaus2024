@@ -56,6 +56,15 @@
 
 
 #define ONE_WIRE_BUS 34 // 1Wire für Temperatursensor
+#define SPIMOSI 12
+#define SPIMISO 13
+#define SPICS 15
+#define SPICLK 14
+
+// DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
+// LedControl lc = LedControl(13, 14, 15, 1);
+
+
 /***********************************************************
     Variablen und Konstanten
 *************************************************************/

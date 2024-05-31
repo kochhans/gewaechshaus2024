@@ -1,7 +1,7 @@
 /*
  *#######################################################
  * Beschreibung.: Gewächshaus-Steuerung
- * Projektname..: GEWAECHSHAUS2
+ * Projektname..: GEWAECHSHAUS2024
  * Dateiname....: main.cpp
  * Autor........: Koch, Hans
  * Datum/Zeit...: 2024-05-28 - 09:00
@@ -41,7 +41,7 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 // LedControl(int dataPin, int clkPin, int csPin, int numDevices=1);
 // DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
-LedControl lc = LedControl(13, 14, 15, 1);
+LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
 /* we always wait a bit between updates of the display */
 unsigned long displaydelaytime = 250;
 
