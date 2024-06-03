@@ -32,18 +32,26 @@ Dateien:
   Bibliotheken einbinden
 *********************************************************** */
 #include "main.h"
-
 /**********************************************************
   Instanzen anlegen
 *********************************************************** */
 // ## Temperatursensor
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
+
 // LedControl(int dataPin, int clkPin, int csPin, int numDevices=1);
 // DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
 LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
 /* we always wait a bit between updates of the display */
 unsigned long displaydelaytime = 250;
+
+// LCD-16x2 Display
+#define COLUMS 20    // LCD columns
+#define ROWS 4       // LCD rows
+#define L_CHANNEL A0 // left audio input pin
+#define R_CHANNEL A1 // right audio input pin
+
+LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POSITIVE);
 
 /**********************************************************
   Funktionen (Funktionsdefinitionen)
@@ -68,9 +76,11 @@ uint8_t fctFindOneWireDevices(int pin)
       for (uint8_t i = 0; i < 8; i++)
       {
         Serial.print("0x");
-        if (address[i] < 0x10) Serial.print("0");
+        if (address[i] < 0x10)
+          Serial.print("0");
         Serial.print(address[i], HEX);
-        if (i < 7) Serial.print(", ");
+        if (i < 7)
+          Serial.print(", ");
       }
       Serial.print("  },");
       // CHECK CRC
@@ -91,8 +101,6 @@ uint8_t fctFindOneWireDevices(int pin)
 
   return count;
 }
-
-
 
 // ## Sensoren am OneWire-Bus lesen und ausgeben
 // ## Rückgabe ist der Temperaturwert des Sensors
@@ -231,27 +239,37 @@ int8_t fctAutomatikbetrieb()
   { // Automatikbetrieb
     delay(prellzeit);
     tempAktuell = fctSensorenLesen(0);
-    if(digitalRead(S1ZU)==LOW)
+    if (digitalRead(S1AUF) == LOW && (digitalRead(S1ZU) == LOW))
     {
+      displayeinflag = true;
+      delay(prellzeit);
+      Serial.println("Das 7-Segemnt-Display ist angesteuert... ");
+      // Serial.println(displayeinflag);
     }
-    if ((displayaktiv==1) )//&& (digitalRead(S1AUF) == LOW))
-    { // Wenn im Automatikbetrieb S1  gedrückt ist,
+    else if (digitalRead(S1AUF) == LOW && (digitalRead(S2AUF) == LOW))
+    {
+      displayeinflag = false;
+      delay(prellzeit);
+      Serial.println("Das 7-Segemnt-Display ist abgeschaltet... ");
+      // Serial.println(displayeinflag);
+    }
+    if ((displayaktiv == 1) && displayeinflag == true) //&& (digitalRead(S1AUF) == LOW))
+    {                                                  // Wenn im Automatikbetrieb S1  gedrückt ist,
       // wird das Display Stromsparmodus angesteuert.
-      Serial.println("S1 gedrückt... ");
+
       // The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
       lc.shutdown(0, false);
       // Helligkeit
-      lc.setIntensity(0, 2);
+      lc.setIntensity(0, 1);
       // Display löschen
-      
-      //lc.clearDisplay(0);
+
+      lc.clearDisplay(0);
       // Anzeige mit aktueller Temperatur ansteuern
       fctSiebensegmentanzeige(0, tempAktuell);
     }
     else
     { // Wenn im Automatikbetrieb S1 nicht gedrückt ist,
       // wird das Display in den Stromsparmodus gesetzt.
-      Serial.println("S1 nicht gedrückt... ");
       lc.shutdown(0, true);
     }
     // Entscheidung, ob und welche Motoren angesteuert werden müssen.
@@ -300,6 +318,7 @@ uint8_t fctHandbetrieb()
   // Display in den Stromsparmodus
   lc.clearDisplay(0);
   lc.shutdown(0, true);
+
   do
   { // Handbetrieb
     // Festlegen der Aktionen aufgrund der Tastenbetätigung
@@ -347,20 +366,20 @@ void fctLedOnboard(boolean schalten)
 {
   if (schalten == true)
   {
-    digitalWrite(LED_ONBOARD, HIGH);
+    // digitalWrite(LED_ONBOARD, HIGH);
   }
   else
   {
-    digitalWrite(LED_ONBOARD, LOW);
+    // digitalWrite(LED_ONBOARD, LOW);
   }
 }
-
 
 /***********************************************************************
        SETUP des Programms - einmalige Einstellungen bei Programmstart
 ************************************************************************/
 void setup()
 {
+  Wire.begin();
   Serial.begin(115200); // Serieller Monitor Start
   Serial.println("--- void setup() Start ---");
   Serial.println("//\n// Start oneWireSearch \n//");
@@ -371,13 +390,12 @@ void setup()
   }
   Serial.println("\n//\n// End oneWireSearch \n//");
 
-  //Ausgänge und Eingänge festlegen
-  pinMode(LED_ONBOARD, OUTPUT);
+  // Ausgänge und Eingänge festlegen
+  // pinMode(LED_ONBOARD, OUTPUT);
   pinMode(MOTOR1PLUS, OUTPUT);
   pinMode(MOTOR1MINUS, OUTPUT);
   pinMode(MOTOR2PLUS, OUTPUT);
   pinMode(MOTOR2MINUS, OUTPUT);
-  
 
   pinMode(SCHALTER, INPUT_PULLUP);
 
@@ -400,10 +418,28 @@ void setup()
   fensterstand2 = 1;
   delay(schaltpause);
   Serial.println("--- void setup() Ende  ---");
+  // LCD-Test
+  Serial.println("I2C-Scanner");
+  i2ctest();
+  while (lcd.begin(COLUMS, ROWS, LCD_5x8DOTS) != 1) // colums, rows, characters size
+  {
+    Serial.println(F("PCF8574 is not connected or lcd pins declaration is wrong. Only pins numbers: 4,5,6,16,11,12,13,14 are legal."));
+    delay(5000);
+  }
+
+  lcd.print("PCF8574 is OK..."); //(F()) saves string to flash & keeps dynamic memory free
+  delay(2000);
+  lcd.clear();
+  lcd.print("Ausgaenge im Moment: "); //(F()) saves string to flash & keeps dynamic memory free 
+  //lcd.clear();
+  // LCD Test Ende -----------------
+
 }
 
 void loop()
 {
+
+
   Serial.println("--- void loop()  Start---");
   Serial.println("--- Betrieb Start ---");
   s1 = digitalRead(SCHALTER);

@@ -18,6 +18,9 @@
 #include "OneWire.h" // Temperatursensor
 #include "DallasTemperature.h"
 #include "LedControl.h"
+#include <Wire.h>
+#include "LiquidCrystal_I2C.h"
+
 /***********************************************************
     Pinbelegung/Sensortyp/Serveradresse definieren
 ************************************************************/
@@ -69,12 +72,12 @@
 #define SEGMENTF 23
 #define SEGMENTG 27
 
-#define LED_ONBOARD 2
+//#define LED_ONBOARD 2
 
 //BUSSE 
 #define ONE_WIRE_BUS 32 // 1Wire für Temperatursensor
-#define SPIMOSI 12
-#define SPIMISO 13
+#define SPIMOSI 13
+#define SPIMISO 12
 #define SPICS 15
 #define SPICLK 14
 
@@ -89,7 +92,7 @@ const uint16_t motordauerAuf = 1000;//45000; // 1000; // 45000 --alt:40000; // D
 const uint16_t motordauerZu = 2000;//50000;  // 1000;  // 50000- alt: 40000;  // Dauer für Schließvorgang in ms
 const uint16_t prellzeit = 500;
 const uint8_t displayaktiv = 1; // Soll das achtstellige 7-Segment-Display angesteuert werden? 0=nein, 1=ja
-
+boolean displayeinflag=false; // Flipflop, um das Display an und aus zu machen
 const int startPin = ONE_WIRE_BUS; //OneWire-Scan
 const int endPin = ONE_WIRE_BUS;
 
@@ -99,6 +102,9 @@ uint8_t fensterstand2 = 0; // 0=zu, 1=offen
 
 float tempAktuell = 999; // Aktuelle Temperatur vom Sensor
 
+
+
+
 /************************************************************
     Funktionsdeklaration
 ************************************************************/
@@ -107,7 +113,15 @@ float fctSensorenLesen(uint adresse);
 int8_t fctAutomatikbetrieb();
 uint8_t fctHandbetrieb();
 
+//SPI
 void fctLedOnboard(boolean);
 void fctSiebensegmentanzeige(uint8_t zustand, float messwertaktuell);
+
+//OneWire
 uint8_t fctFindOneWireDevices(int pin);
+
+//I2C
+void i2ctest();
+
+
 #endif
