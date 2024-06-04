@@ -19,10 +19,10 @@
 #include "driver/gpio.h"
 
 #include "OneWire.h" // Temperatursensor
-#include "DallasTemperature.h"
-#include "LedControl.h"
+//#include "DallasTemperature.h"
+//
 #include <Wire.h>
-#include "LiquidCrystal_I2C.h"
+//#include "LiquidCrystal_I2C.h"
 
 /***********************************************************
     Pinbelegung/Sensortyp/Serveradresse definieren
@@ -79,10 +79,7 @@
 
 //BUSSE 
 #define ONE_WIRE_BUS 32 // 1Wire für Temperatursensor
-#define SPIMOSI 13
-#define SPIMISO 12
-#define SPICS 15
-#define SPICLK 14
+
 
 
 
@@ -125,10 +122,17 @@ uint8_t fctHandbetrieb();
 
 //SPI
 void fctLedOnboard(boolean);
-void fctSiebensegmentanzeige(uint8_t zustand, float messwertaktuell);
+void fct7SegWrite(uint8_t zustand, float messwertaktuell);
+void fct7SegAktiv(int adresse, boolean ein);
+void fct7SegHelligkeit(int adresse, int wert);
+void fct7SegLeeren(int adresse);
 
 //OneWire
 uint8_t fctFindOneWireDevices(int pin);
+void fctOneWireSensorsStart();
+
+
+
 
 //I2C
 void i2ctest();
