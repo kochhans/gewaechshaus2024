@@ -32,6 +32,7 @@ Dateien:
   Bibliotheken einbinden
 *********************************************************** */
 #include "main.h"
+//#include "mainvar.h"
 
 /**********************************************************
   Instanzen anlegen

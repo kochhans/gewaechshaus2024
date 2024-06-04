@@ -44,7 +44,7 @@
 #define S1AUF 26   // Taste
 #define S1ZU 25    // Taste
 #define S2AUF 33   // Taste
-#define S2ZU 35    // Taste
+#define S2ZU 35    // Taste*/
 
 //AUSGABEN
 
@@ -98,10 +98,11 @@ float tempAktuell = 999; // Aktuelle Temperatur vom Sensor
 
 std::string lcdText="";
 
-
-/************************************************************
+/*
+************************************************************
     Funktionsdeklaration
-************************************************************/
+************************************************************
+*/
 void fctLedOnboard(boolean schalten);
 void fctMotor(uint8_t motorauswahl, uint8_t richtung, uint16_t dauer);
 void fctMotorpins();
