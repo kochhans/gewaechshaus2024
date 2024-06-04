@@ -3,16 +3,14 @@
  * Beschreibung.: Funktion für das 7Segment LED-Display
  * Dateiname....: leddisplay.cpp
  *#######################################################
-*/
+ */
 #include "LedControl.h"
-#define SPIMOSI 13
-#define SPIMISO 12
-#define SPICS 15
-#define SPICLK 14
+#include "leddisplay.h"
+
 
 // LedControl(int dataPin, int clkPin, int csPin, int numDevices=1);
 // DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
-LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
+LedControl lc = LedControl(conf.SPI_MOSI, conf.SPI_CLK, conf.SPI_CS, 1);
 /* we always wait a bit between updates of the display */
 unsigned long displaydelaytime = 250;
 

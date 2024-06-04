@@ -1,0 +1,18 @@
+Beschreibung:
+Die Steuerung schaltet über eine Doppel-H-Brücke zwei Stellmotoren für
+die Fenster im Gewächshaus. Zunächst ist nur das vollständige Öffnen und Schließen vorgesehen.
+Abhängig vom Messwert des Temperatursensors DS18B20 erfolgt die Ansteuerung der H-Brücke
+und die entsprechende Drehrichtung der Motoren.
+
+Der Handbetrieb ist durch Betätigen eines Druckschalters (S1 Hand/Auto) möglich.
+Anschließend kann jeder Motor einzeln per Taste (S1AUF, S1ZU, S2AUF, S2ZU angesteuert werden.
+Die Ansteuerzeiten entsprechen denen des Automatikbetriebs.
+S1AUF, S1ZU : Steuerung von Fenster 1
+S2AUF, S2ZU : Steuerung von Fenster 2
+
+Anzeigensteuerung:
+Im Automatikbetrieb kann durch Drücken von S1AUF die Temperatur auf der Anzeige sichtbar gemacht werden.
+***********************************************************
+Dateien:
++src  main.cpp
+      main.h

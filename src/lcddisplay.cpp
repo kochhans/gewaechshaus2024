@@ -12,6 +12,7 @@
 #define ROWS      2  //LCD rows
 #define L_CHANNEL A0 //left audio input pin
 #define R_CHANNEL A1 //right audio input pin
+
 LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POSITIVE);
 
 void fctLcdText(std::string lcdtext, int spalte, int zeile)
