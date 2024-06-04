@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <bits/stdc++.h>
+#include <string>
+#include <iostream>
+
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -82,6 +85,10 @@
 #define SPICLK 14
 
 
+
+
+
+
 /***********************************************************
     Variablen und Konstanten
 *************************************************************/
@@ -101,6 +108,9 @@ uint8_t fensterstand1 = 0; // 0=zu, 1=offen
 uint8_t fensterstand2 = 0; // 0=zu, 1=offen
 
 float tempAktuell = 999; // Aktuelle Temperatur vom Sensor
+
+std::string lcdText="";
+
 
 
 
@@ -122,6 +132,9 @@ uint8_t fctFindOneWireDevices(int pin);
 
 //I2C
 void i2ctest();
+void fctLcdText(std::string lcdtext, int spalte, int zeile);
+void fctLcdDelete();
+std::string fctFloatString(float input, int stellen);
 
 
 #endif

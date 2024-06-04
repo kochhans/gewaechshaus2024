@@ -45,13 +45,6 @@ LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
 /* we always wait a bit between updates of the display */
 unsigned long displaydelaytime = 250;
 
-// LCD-16x2 Display
-#define COLUMS 20    // LCD columns
-#define ROWS 4       // LCD rows
-#define L_CHANNEL A0 // left audio input pin
-#define R_CHANNEL A1 // right audio input pin
-
-LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POSITIVE);
 
 /**********************************************************
   Funktionen (Funktionsdefinitionen)
@@ -266,6 +259,16 @@ int8_t fctAutomatikbetrieb()
       lc.clearDisplay(0);
       // Anzeige mit aktueller Temperatur ansteuern
       fctSiebensegmentanzeige(0, tempAktuell);
+      // std::string tempAktuellString = to_string(tempAktuell);
+      
+      fctLcdDelete();
+      //fctLcdText("Temperatur...", 0, 0);
+      lcdText="Temp: ";
+
+      fctLcdText(fctFloatString(tempAktuell, 3), 0, 0);
+
+
+
     }
     else
     { // Wenn im Automatikbetrieb S1 nicht gedrückt ist,
@@ -418,28 +421,13 @@ void setup()
   fensterstand2 = 1;
   delay(schaltpause);
   Serial.println("--- void setup() Ende  ---");
-  // LCD-Test
-  Serial.println("I2C-Scanner");
-  i2ctest();
-  while (lcd.begin(COLUMS, ROWS, LCD_5x8DOTS) != 1) // colums, rows, characters size
-  {
-    Serial.println(F("PCF8574 is not connected or lcd pins declaration is wrong. Only pins numbers: 4,5,6,16,11,12,13,14 are legal."));
-    delay(5000);
-  }
 
-  lcd.print("PCF8574 is OK..."); //(F()) saves string to flash & keeps dynamic memory free
-  delay(2000);
-  lcd.clear();
-  lcd.print("Ausgaenge im Moment: "); //(F()) saves string to flash & keeps dynamic memory free 
-  //lcd.clear();
-  // LCD Test Ende -----------------
 
+  //fctLcdText("Gewaechshaus2024", 0, 1);
 }
 
 void loop()
 {
-
-
   Serial.println("--- void loop()  Start---");
   Serial.println("--- Betrieb Start ---");
   s1 = digitalRead(SCHALTER);
