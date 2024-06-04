@@ -18,11 +18,9 @@
 #include "freertos/task.h"
 #include "driver/gpio.h"
 
-#include "OneWire.h" // Temperatursensor
-#include "DallasTemperature.h"
-#include "LedControl.h"
-#include <Wire.h>
-#include "LiquidCrystal_I2C.h"
+//#include "LedControl.h"
+//#include <Wire.h>
+//#include "LiquidCrystal_I2C.h"
 
 /***********************************************************
     Pinbelegung/Sensortyp/Serveradresse definieren

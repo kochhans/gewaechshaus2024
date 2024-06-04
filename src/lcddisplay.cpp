@@ -5,7 +5,6 @@
  *#######################################################
 */
 
-#include <Arduino.h>
 #include <bits/stdc++.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -20,7 +19,7 @@ void fctLcdText(std::string lcdtext, int spalte, int zeile)
   //  LCD Test  -----------------
   while (lcd.begin(COLUMS, ROWS, LCD_5x8DOTS) != 1) //colums, rows, characters size
   {
-    Serial.println(F("PCF8574 is not connected or lcd pins declaration is wrong. Only pins numbers: 4,5,6,16,11,12,13,14 are legal."));
+    Serial.print(F("PCF8574 is not connected or lcd pins declaration is wrong. Only pins numbers: 4,5,6,16,11,12,13,14 are legal.\n"));
     delay(5000);   
   }
 

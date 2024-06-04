@@ -1,3 +1,9 @@
+/*
+ *#######################################################
+ * Beschreibung.: Funktion zum Testen des I2C Busses
+ * Dateiname....: i2ctest.cpp
+ *#######################################################
+*/
 #include <Wire.h>
 #include <Arduino.h>
 

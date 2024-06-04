@@ -1,15 +1,19 @@
-#include "OneWire.h" // Temperatursensor
+/*
+ *#######################################################
+ * Beschreibung.: OneWire-Sensoren ansteuern
+ * Dateiname....: onewiresensor.cpp
+ *#######################################################
+*/
+#include "OneWire.h"    // 
 #include "DallasTemperature.h"
 #include <Wire.h>
-#define ONE_WIRE_BUS 32 // 1Wire für Temperatursensor
+#define ONE_WIRE_BUS 32 // Anschluss am ESP32
+
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
+
 void fctOneWireSensorsStart();
-// LedControl(int dataPin, int clkPin, int csPin, int numDevices=1);
-// DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
-//LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
-/* we always wait a bit between updates of the display */
-//unsigned long displaydelaytime = 250;
+
 
 /**********************************************************
   Funktionen (Funktionsdefinitionen)
@@ -62,7 +66,6 @@ void fctOneWireSensorsStart()
 {
     sensors.begin();
 }
-
 
 // ## Sensoren am OneWire-Bus lesen und ausgeben
 // ## Rückgabe ist der Temperaturwert des Sensors
