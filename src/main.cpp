@@ -36,90 +36,11 @@ Dateien:
 /**********************************************************
   Instanzen anlegen
 *********************************************************** */
-// ## Temperatursensor
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
-// LedControl(int dataPin, int clkPin, int csPin, int numDevices=1);
-// DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
-//LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
-/* we always wait a bit between updates of the display */
-//unsigned long displaydelaytime = 250;
+
 
 /**********************************************************
   Funktionen (Funktionsdefinitionen)
 *********************************************************** */
-
-uint8_t fctFindOneWireDevices(int pin)
-{
-  OneWire ow(pin);
-
-  uint8_t address[8];
-  uint8_t count = 0;
-
-  if (ow.search(address))
-  {
-    Serial.print("\nuint8_t pin");
-    Serial.print(pin, DEC);
-    Serial.println("[][8] = {");
-    do
-    {
-      count++;
-      Serial.println("  {");
-      for (uint8_t i = 0; i < 8; i++)
-      {
-        Serial.print("0x");
-        if (address[i] < 0x10) Serial.print("0");
-        Serial.print(address[i], HEX);
-        if (i < 7) Serial.print(", ");
-      }
-      Serial.print("  },");
-      // CHECK CRC
-      if (ow.crc8(address, 7) == address[7])
-      {
-        Serial.println("\t\t// CRC OK");
-      }
-      else
-      {
-        Serial.println("\t\t// CRC FAILED");
-      }
-    } while (ow.search(address));
-
-    Serial.println("};");
-    Serial.print("// nr devices found: ");
-    Serial.println(count);
-  }
-
-  return count;
-}
-
-
-
-// ## Sensoren am OneWire-Bus lesen und ausgeben
-// ## Rückgabe ist der Temperaturwert des Sensors
-float fctSensorenLesen(uint adresse)
-{
-  sensors.requestTemperatures();
-  float tempC = sensors.getTempCByIndex(adresse);
-  if (tempC != DEVICE_DISCONNECTED_C)
-  {
-    Serial.print("Messung Temperatursensor Adr. ");
-    Serial.print(adresse);
-    Serial.print("  (in °C)...: ");
-    Serial.println(tempC);
-  }
-  else
-  {
-    Serial.print("ACHTUNG!!! Sensor ");
-    Serial.print(adresse);
-    Serial.println(" nicht erreichbar!!!");
-    tempC = 999;
-  }
-  return (tempC);
-}
-
-
-
-
 
 // ## Onboard-LED soll leuchten, wenn ein Fenster beliebig bewegt wird
 void fctLedOnboard(boolean schalten)
@@ -350,7 +271,8 @@ void setup()
   pinMode(S2ZU, INPUT_PULLUP);
 
   // Dallas Temperatursensor init
-  sensors.begin();
+  fctOneWireSensorsStart();
+  //sensors.begin();
   Serial.println("--- Einschaltphase Start ---");
   // Fenster 1 aufmachen
   fctMotor(1, 1, motordauerAuf);
