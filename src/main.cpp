@@ -117,46 +117,7 @@ float fctSensorenLesen(uint adresse)
   return (tempC);
 }
 
-// Siebensegmentanzeige ansteuern (adresse, messwert)
-/*void fctSiebensegmentanzeige(uint8_t adresse, float messwertaktuell)
-{
-  // Float-Messwert in String wandlen
-  std::string messwertaktuell_str = std::to_string(messwertaktuell);
-  // Einzelne Chars für die Ziffernanzeige extrahieren
-  std::string ziffer3 = messwertaktuell_str.substr(0, 1);
-  std::string ziffer2 = messwertaktuell_str.substr(1, 1);
-  std::string zifferdot = messwertaktuell_str.substr(2, 1);
-  std::string ziffer1 = messwertaktuell_str.substr(3, 1);
-  std::string ziffer0 = messwertaktuell_str.substr(4, 1);
-  char z3 = ziffer3[0];
-  char z2 = ziffer2[0];
-  char zdot = zifferdot[0];
-  char z1 = ziffer1[0];
-  char z0 = ziffer0[0];
-   Testausgaben der Chars
-  /*std::cout << "\nChar3" << z3;
-  std::cout << "\nChar2" << z2;
-  std::cout << "\nChardot" << zdot;
-  std::cout << "\nChar1" << z1;
-  std::cout << "\nChar0" << z0;
 
-   Display setzen
-  lc.setChar(adresse, 7, z3, false);
-  delay(displaydelaytime);
-  lc.setChar(adresse, 6, z2, true);
-  delay(displaydelaytime);
-  lc.setChar(adresse, 5, z1, false);
-  delay(displaydelaytime);
-  lc.setChar(adresse, 4, z0, false);
-  delay(displaydelaytime);
-  lc.setChar(adresse, 3, 'x', false);
-  delay(displaydelaytime);
-  lc.setChar(adresse, 2, 'o', false);
-  delay(displaydelaytime);
-  lc.setChar(adresse, 1, 'C', false);
-  delay(displaydelaytime);
-}
-*/
 
 // ## Fenstermotoren ansteuern (Motor, Richtung, Dauer)
 void fctMotor(uint8_t motorauswahl, uint8_t richtung, uint16_t dauer)
@@ -241,16 +202,17 @@ int8_t fctAutomatikbetrieb()
       Serial.println("S1 gedrückt... ");
       // The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
       fct7SegAktiv(0, true);
-      //lc.shutdown(0, false);
       // Helligkeit
       fct7SegHelligkeit(0,2);
-      //lc.setIntensity(0, 2);
-      // Display löschen
-      
-      //lc.clearDisplay(0);
       // Anzeige mit aktueller Temperatur ansteuern
       fct7SegWrite(0, tempAktuell);
-      //fctSiebensegmentanzeige(0, tempAktuell);
+
+      fctLcdDelete();
+      //fctLcdText("Temperatur...", 0, 0);
+      lcdText="Temp: ";
+      lcdText=lcdText + fctFloatString(tempAktuell, 3);
+      fctLcdText(lcdText, 0,0);
+ 
     }
     else
     { // Wenn im Automatikbetrieb S1 nicht gedrückt ist,

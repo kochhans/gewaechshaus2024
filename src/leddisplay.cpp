@@ -4,8 +4,6 @@
  * Dateiname....: leddisplay.cpp
  *#######################################################
 */
-
-//#include "main.h"
 #include "LedControl.h"
 #define SPIMOSI 13
 #define SPIMISO 12

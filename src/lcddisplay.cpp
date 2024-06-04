@@ -1,6 +1,12 @@
+/*
+ *#######################################################
+ * Beschreibung.: Funktion für das 7Segment LED-Display
+ * Dateiname....: lcddisplay.cpp
+ *#######################################################
+*/
+
 #include <Arduino.h>
 #include <bits/stdc++.h>
-// #include "main.h"
 #include <LiquidCrystal_I2C.h>
 
 #define COLUMS    16 //LCD columns
