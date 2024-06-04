@@ -32,19 +32,18 @@ Dateien:
   Bibliotheken einbinden
 *********************************************************** */
 #include "main.h"
+
 /**********************************************************
   Instanzen anlegen
 *********************************************************** */
 // ## Temperatursensor
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
-
 // LedControl(int dataPin, int clkPin, int csPin, int numDevices=1);
 // DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
-LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
+//LedControl lc = LedControl(SPIMOSI, SPICLK, SPICS, 1);
 /* we always wait a bit between updates of the display */
-unsigned long displaydelaytime = 250;
-
+//unsigned long displaydelaytime = 250;
 
 /**********************************************************
   Funktionen (Funktionsdefinitionen)
@@ -69,11 +68,9 @@ uint8_t fctFindOneWireDevices(int pin)
       for (uint8_t i = 0; i < 8; i++)
       {
         Serial.print("0x");
-        if (address[i] < 0x10)
-          Serial.print("0");
+        if (address[i] < 0x10) Serial.print("0");
         Serial.print(address[i], HEX);
-        if (i < 7)
-          Serial.print(", ");
+        if (i < 7) Serial.print(", ");
       }
       Serial.print("  },");
       // CHECK CRC
@@ -94,6 +91,8 @@ uint8_t fctFindOneWireDevices(int pin)
 
   return count;
 }
+
+
 
 // ## Sensoren am OneWire-Bus lesen und ausgeben
 // ## Rückgabe ist der Temperaturwert des Sensors
@@ -119,7 +118,7 @@ float fctSensorenLesen(uint adresse)
 }
 
 // Siebensegmentanzeige ansteuern (adresse, messwert)
-void fctSiebensegmentanzeige(uint8_t adresse, float messwertaktuell)
+/*void fctSiebensegmentanzeige(uint8_t adresse, float messwertaktuell)
 {
   // Float-Messwert in String wandlen
   std::string messwertaktuell_str = std::to_string(messwertaktuell);
@@ -134,14 +133,14 @@ void fctSiebensegmentanzeige(uint8_t adresse, float messwertaktuell)
   char zdot = zifferdot[0];
   char z1 = ziffer1[0];
   char z0 = ziffer0[0];
-  // Testausgaben der Chars
+   Testausgaben der Chars
   /*std::cout << "\nChar3" << z3;
   std::cout << "\nChar2" << z2;
   std::cout << "\nChardot" << zdot;
   std::cout << "\nChar1" << z1;
-  std::cout << "\nChar0" << z0;*/
+  std::cout << "\nChar0" << z0;
 
-  // Display setzen
+   Display setzen
   lc.setChar(adresse, 7, z3, false);
   delay(displaydelaytime);
   lc.setChar(adresse, 6, z2, true);
@@ -157,6 +156,7 @@ void fctSiebensegmentanzeige(uint8_t adresse, float messwertaktuell)
   lc.setChar(adresse, 1, 'C', false);
   delay(displaydelaytime);
 }
+*/
 
 // ## Fenstermotoren ansteuern (Motor, Richtung, Dauer)
 void fctMotor(uint8_t motorauswahl, uint8_t richtung, uint16_t dauer)
@@ -232,48 +232,32 @@ int8_t fctAutomatikbetrieb()
   { // Automatikbetrieb
     delay(prellzeit);
     tempAktuell = fctSensorenLesen(0);
-    if (digitalRead(S1AUF) == LOW && (digitalRead(S1ZU) == LOW))
+    if(digitalRead(S1ZU)==LOW)
     {
-      displayeinflag = true;
-      delay(prellzeit);
-      Serial.println("Das 7-Segemnt-Display ist angesteuert... ");
-      // Serial.println(displayeinflag);
     }
-    else if (digitalRead(S1AUF) == LOW && (digitalRead(S2AUF) == LOW))
-    {
-      displayeinflag = false;
-      delay(prellzeit);
-      Serial.println("Das 7-Segemnt-Display ist abgeschaltet... ");
-      // Serial.println(displayeinflag);
-    }
-    if ((displayaktiv == 1) && displayeinflag == true) //&& (digitalRead(S1AUF) == LOW))
-    {                                                  // Wenn im Automatikbetrieb S1  gedrückt ist,
+    if ((displayaktiv==1) )//&& (digitalRead(S1AUF) == LOW))
+    { // Wenn im Automatikbetrieb S1  gedrückt ist,
       // wird das Display Stromsparmodus angesteuert.
-
+      Serial.println("S1 gedrückt... ");
       // The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
-      lc.shutdown(0, false);
+      fct7SegAktiv(0, true);
+      //lc.shutdown(0, false);
       // Helligkeit
-      lc.setIntensity(0, 1);
+      fct7SegHelligkeit(0,2);
+      //lc.setIntensity(0, 2);
       // Display löschen
-
-      lc.clearDisplay(0);
-      // Anzeige mit aktueller Temperatur ansteuern
-      fctSiebensegmentanzeige(0, tempAktuell);
-      // std::string tempAktuellString = to_string(tempAktuell);
       
-      fctLcdDelete();
-      //fctLcdText("Temperatur...", 0, 0);
-      lcdText="Temp: ";
-
-      fctLcdText(fctFloatString(tempAktuell, 3), 0, 0);
-
-
-
+      //lc.clearDisplay(0);
+      // Anzeige mit aktueller Temperatur ansteuern
+      fct7SegWrite(0, tempAktuell);
+      //fctSiebensegmentanzeige(0, tempAktuell);
     }
     else
     { // Wenn im Automatikbetrieb S1 nicht gedrückt ist,
       // wird das Display in den Stromsparmodus gesetzt.
-      lc.shutdown(0, true);
+      Serial.println("S1 nicht gedrückt... ");
+      fct7SegAktiv(0, false);
+      //lc.shutdown(0, true);
     }
     // Entscheidung, ob und welche Motoren angesteuert werden müssen.
     if ((tempAktuell > tempAuf) && fensterstand1 == 0)
@@ -319,9 +303,10 @@ uint8_t fctHandbetrieb()
 {
   Serial.println("... Handbetrieb gewählt");
   // Display in den Stromsparmodus
-  lc.clearDisplay(0);
-  lc.shutdown(0, true);
-
+  fct7SegLeeren(0);
+  //lc.clearDisplay(0);
+  fct7SegAktiv(0, false);
+  //lc.shutdown(0, true);
   do
   { // Handbetrieb
     // Festlegen der Aktionen aufgrund der Tastenbetätigung
@@ -367,22 +352,15 @@ uint8_t fctHandbetrieb()
 // ## Onboard-LED soll leuchten, wenn ein Fenster beliebig bewegt wird
 void fctLedOnboard(boolean schalten)
 {
-  if (schalten == true)
-  {
-    // digitalWrite(LED_ONBOARD, HIGH);
-  }
-  else
-  {
-    // digitalWrite(LED_ONBOARD, LOW);
-  }
+
 }
+
 
 /***********************************************************************
        SETUP des Programms - einmalige Einstellungen bei Programmstart
 ************************************************************************/
 void setup()
 {
-  Wire.begin();
   Serial.begin(115200); // Serieller Monitor Start
   Serial.println("--- void setup() Start ---");
   Serial.println("//\n// Start oneWireSearch \n//");
@@ -393,12 +371,13 @@ void setup()
   }
   Serial.println("\n//\n// End oneWireSearch \n//");
 
-  // Ausgänge und Eingänge festlegen
-  // pinMode(LED_ONBOARD, OUTPUT);
+  //Ausgänge und Eingänge festlegen
+  //pinMode(LED_ONBOARD, OUTPUT);
   pinMode(MOTOR1PLUS, OUTPUT);
   pinMode(MOTOR1MINUS, OUTPUT);
   pinMode(MOTOR2PLUS, OUTPUT);
   pinMode(MOTOR2MINUS, OUTPUT);
+  
 
   pinMode(SCHALTER, INPUT_PULLUP);
 
@@ -421,9 +400,6 @@ void setup()
   fensterstand2 = 1;
   delay(schaltpause);
   Serial.println("--- void setup() Ende  ---");
-
-
-  //fctLcdText("Gewaechshaus2024", 0, 1);
 }
 
 void loop()

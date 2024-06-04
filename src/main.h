@@ -126,6 +126,10 @@ uint8_t fctHandbetrieb();
 //SPI
 void fctLedOnboard(boolean);
 void fctSiebensegmentanzeige(uint8_t zustand, float messwertaktuell);
+void fct7SegWrite(uint8_t adresse, float messwertaktuell);
+void fct7SegAktiv(int adresse, boolean ein);
+void fct7SegHelligkeit(int adresse, int wert);
+void fct7SegLeeren(int adresse);
 
 //OneWire
 uint8_t fctFindOneWireDevices(int pin);
