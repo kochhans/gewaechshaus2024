@@ -47,10 +47,6 @@
 #define S2ZU 35    // Taste
 
 //AUSGABEN
-#define MOTOR1PLUS 2 // Steuerung der H-Brücke
-#define MOTOR1MINUS 4
-#define MOTOR2PLUS 5
-#define MOTOR2MINUS 18
 
 #define OUTD0 2
 #define OUTD1 4
@@ -106,7 +102,9 @@ std::string lcdText="";
 /************************************************************
     Funktionsdeklaration
 ************************************************************/
+void fctLedOnboard(boolean schalten);
 void fctMotor(uint8_t motorauswahl, uint8_t richtung, uint16_t dauer);
+void fctMotorpins();
 float fctSensorenLesen(uint adresse);
 int8_t fctAutomatikbetrieb();
 uint8_t fctHandbetrieb();
