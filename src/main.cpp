@@ -8,52 +8,81 @@
  * Controller...: ESP32 WROOM auf nodemcu-32s
  * Framework....: VSCode PlatformIO Arduino
  *#######################################################
-*/
+ */
 #include "main.h"
+// #include "Siebensegment.h"
+#include "LedControl.h"
 
 // ## Onboard-LED soll leuchten, wenn ein Fenster beliebig bewegt wird
 void fctLedOnboard(boolean schalten)
 {
-
 }
 
 // ## Automatikbetrieb, Messung der Temperatur und Fenster bei Bedarf öffnen/schließen
 // ## Rückgabe 0, wenn auf Handbetrieb geschaltet wurde
 int8_t fctAutomatikbetrieb()
 {
-  int messwertzahl = 0;
+  Serial.println(".---------------------------------");
   Serial.println("... Automatik gewählt");
+
+  int messwertzahl = 0;
+  // Siebensegment *my7seg = new Siebensegment(); // neues Objekt my7seg
+  // my7seg->aktivieren(0, 1);                    // Methode start aufrufen
+  //   delay(1000);
+
   do
   { // Automatikbetrieb
     delay(prellzeit);
+    Serial.println("LDR und Poti:");
+    Serial.println(fctLdrLesen());
+    Serial.println(fctPotiLesen());
+
     tempAktuell = fctSensorenLesen(0);
-    if(digitalRead(S1ZU)==LOW)
+    if (digitalRead(S1ZU) == LOW)
     {
     }
-    if ((displayaktiv==1) )//&& (digitalRead(S1AUF) == LOW))
-    { // Wenn im Automatikbetrieb S1  gedrückt ist,
+    if ((displayaktiv == 1)) //&& (digitalRead(S1AUF) == LOW))
+    {                        // Wenn im Automatikbetrieb S1  gedrückt ist,
       // wird das Display Stromsparmodus angesteuert.
-      Serial.println("S1 gedrückt... ");
+      Serial.println("LCD einschalten ");
+      fctLcdText("Temperatur...", 0, 0);
+      lcdText = "Temp: ";
+      lcdText = lcdText + fctFloatString(tempAktuell, 3);
+      fctLcdText(lcdText, 0, 0);
+      delay(500);
+      Serial.println("LED mit Funktionen ");
       // The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
       fct7SegAktiv(0, true);
       // Helligkeit
-      fct7SegHelligkeit(0,2);
+      fct7SegHelligkeit(0, 1);
       // Anzeige mit aktueller Temperatur ansteuern
       fct7SegWrite(0, tempAktuell);
+      // fct7SegAktiv(0, false);
+      delay(1000);
+      fct7SegHelligkeit(0, 15);
+      delay(1000);
+      // fct7SegAktiv(0, false);
 
-      fctLcdDelete();
-      //fctLcdText("Temperatur...", 0, 0);
-      lcdText="Temp: ";
-      lcdText=lcdText + fctFloatString(tempAktuell, 3);
-      fctLcdText(lcdText, 0,0);
- 
+      /*_-----------------------------------------------------
+            my7seg->setIntens(0, 1); // Helligkeit einstellen
+            // my7seg.blank(1);
+            my7seg->write(0, tempAktuell + 0.5); // schreiben
+            // fctLcdDelete();
+            my7seg->setIntens(0, 9); // Helligkeit ändern
+            // my7seg.blank(1);
+            delay(500);
+            my7seg->write(0, tempAktuell - 0.5);
+            delay(500);
+            my7seg->setIntens(0, 3); // Helligkeit ändern
+            delay(500);
+      ------------------------------------------------------------*/
     }
     else
     { // Wenn im Automatikbetrieb S1 nicht gedrückt ist,
       // wird das Display in den Stromsparmodus gesetzt.
       Serial.println("S1 nicht gedrückt... ");
       fct7SegAktiv(0, false);
-      //lc.shutdown(0, true);
+      // lc.shutdown(0, true);
     }
     // Entscheidung, ob und welche Motoren angesteuert werden müssen.
     if ((tempAktuell > tempAuf) && fensterstand1 == 0)
@@ -100,9 +129,9 @@ uint8_t fctHandbetrieb()
   Serial.println("... Handbetrieb gewählt");
   // Display in den Stromsparmodus
   fct7SegLeeren(0);
-  //lc.clearDisplay(0);
+  // lc.clearDisplay(0);
   fct7SegAktiv(0, false);
-  //lc.shutdown(0, true);
+  // lc.shutdown(0, true);
   do
   { // Handbetrieb
     // Festlegen der Aktionen aufgrund der Tastenbetätigung
@@ -160,17 +189,21 @@ void setup()
   }
   Serial.println("\n//\n// End oneWireSearch \n//");
 
-  //Ausgänge und Eingänge festlegen
+  // Ausgänge und Eingänge festlegen
   fctMotorpins();
   pinMode(SCHALTER, INPUT_PULLUP);
   pinMode(S1AUF, INPUT_PULLUP);
   pinMode(S1ZU, INPUT_PULLUP);
   pinMode(S2AUF, INPUT_PULLUP);
   pinMode(S2ZU, INPUT_PULLUP);
+  pinMode(36, INPUT);
+  pinMode(39, INPUT);
+
+
 
   // Dallas Temperatursensor init
   fctOneWireSensorsStart();
-  //sensors.begin();
+  // sensors.begin();
   Serial.println("--- Einschaltphase Start ---");
   // Fenster 1 aufmachen
   fctMotor(1, 1, motordauerAuf);

@@ -6,4 +6,5 @@ struct LEDDisplayConf
     const int SPI_CS = 15;
     const int SPI_CLK = 14;
 };
-LEDDisplayConf conf;
+LEDDisplayConf confled;
+

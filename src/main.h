@@ -43,7 +43,13 @@
 #define S1AUF 26   // Taste
 #define S1ZU 25    // Taste
 #define S2AUF 33   // Taste
-#define S2ZU 35    // Taste*/
+#define S2ZU 35    // Taste
+#define AD0_PIN 36 //
+#define AD3_PIN 39
+
+
+
+
 
 //AUSGABEN
 
@@ -125,6 +131,10 @@ void i2ctest();
 void fctLcdText(std::string lcdtext, int spalte, int zeile);
 void fctLcdDelete();
 std::string fctFloatString(float input, int stellen);
+
+//AD
+int fctLdrLesen();
+int fctPotiLesen();
 
 
 #endif

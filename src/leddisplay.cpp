@@ -7,10 +7,7 @@
 #include "LedControl.h"
 #include "leddisplay.h"
 
-
-// LedControl(int dataPin, int clkPin, int csPin, int numDevices=1);
-// DATA= GPIO13, CL=GPIO14, CS=15, 1 Anzeige)
-LedControl lc = LedControl(conf.SPI_MOSI, conf.SPI_CLK, conf.SPI_CS, 1);
+LedControl lc = LedControl(confled.SPI_MOSI, confled.SPI_CLK, confled.SPI_CS, 1);
 /* we always wait a bit between updates of the display */
 unsigned long displaydelaytime = 250;
 
@@ -63,12 +60,15 @@ void fct7SegAktiv(int adresse, boolean ein)
     {
         lc.shutdown(adresse, true);
     }
+    delay(displaydelaytime);
 }
 void fct7SegHelligkeit(int adresse, int wert)
 {
     lc.setIntensity(adresse, wert);
+    delay(displaydelaytime);
 }
 void fct7SegLeeren(int adresse)
 {
     lc.clearDisplay(adresse);
+        delay(displaydelaytime);
 }
