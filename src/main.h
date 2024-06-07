@@ -103,6 +103,13 @@ float tempAktuell = 999; // Aktuelle Temperatur vom Sensor
 
 std::string lcdText="";
 
+boolean flgtemp = false;
+boolean flghell = false;
+boolean flgwiderstand = false;
+
+int werthelligkeit = 0;
+int wertwiderstand =0;
+
 /*
 ************************************************************
     Funktionsdeklaration
@@ -114,6 +121,7 @@ void fctMotorpins();
 float fctSensorenLesen(uint adresse);
 int8_t fctAutomatikbetrieb();
 uint8_t fctHandbetrieb();
+
 
 //SPI
 void fctLedOnboard(boolean);

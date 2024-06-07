@@ -33,23 +33,20 @@ int8_t fctAutomatikbetrieb()
   do
   { // Automatikbetrieb
     delay(prellzeit);
-    Serial.println("LDR und Poti:");
-    Serial.println(fctLdrLesen());
-    Serial.println(fctPotiLesen());
+    //Serial.println("LDR und Poti:");
+    //Serial.println(fctLdrLesen());
+    //Serial.println(fctPotiLesen());
 
     tempAktuell = fctSensorenLesen(0);
-    if (digitalRead(S1ZU) == LOW)
-    {
-    }
-    if ((displayaktiv == 1)) //&& (digitalRead(S1AUF) == LOW))
-    {                        // Wenn im Automatikbetrieb S1  gedrückt ist,
+
+    if ((displayaktiv == 1))
+    { // Wenn im Automatikbetrieb S1  gedrückt ist,
       // wird das Display Stromsparmodus angesteuert.
       Serial.println("LCD einschalten ");
       fctLcdText("Temperatur...", 0, 0);
       lcdText = "Temp: ";
       lcdText = lcdText + fctFloatString(tempAktuell, 3);
       fctLcdText(lcdText, 0, 0);
-      delay(500);
       Serial.println("LED mit Funktionen ");
       // The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
       fct7SegAktiv(0, true);
@@ -58,10 +55,24 @@ int8_t fctAutomatikbetrieb()
       // Anzeige mit aktueller Temperatur ansteuern
       fct7SegWrite(0, tempAktuell);
       // fct7SegAktiv(0, false);
-      delay(1000);
-      fct7SegHelligkeit(0, 15);
-      delay(1000);
-      // fct7SegAktiv(0, false);
+      delay(2000);
+
+
+        //werthelligkeit = (fctLdrLesen());
+        Serial.println("LDR: " + werthelligkeit);
+        lcdText = "Helligkeit: ";
+        lcdText = lcdText + fctFloatString(werthelligkeit, 3);
+        fctLcdText(lcdText, 0, 0);
+
+      delay(2000);
+
+
+        wertwiderstand = (fctPotiLesen());
+        Serial.println("Wid:: " + wertwiderstand);
+        lcdText = "Wid: ";
+        lcdText = lcdText + fctFloatString(wertwiderstand, 3);
+        fctLcdText(lcdText, 0, 0);
+
 
       /*_-----------------------------------------------------
             my7seg->setIntens(0, 1); // Helligkeit einstellen
@@ -196,10 +207,8 @@ void setup()
   pinMode(S1ZU, INPUT_PULLUP);
   pinMode(S2AUF, INPUT_PULLUP);
   pinMode(S2ZU, INPUT_PULLUP);
-  pinMode(36, INPUT);
+  // pinMode(36, INPUT);
   pinMode(39, INPUT);
-
-
 
   // Dallas Temperatursensor init
   fctOneWireSensorsStart();
