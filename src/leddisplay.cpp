@@ -9,7 +9,7 @@
 
 LedControl lc = LedControl(confled.SPI_MOSI, confled.SPI_CLK, confled.SPI_CS, 1);
 /* we always wait a bit between updates of the display */
-unsigned long displaydelaytime = 250;
+//unsigned long displaydelaytime = 250;
 
 // Siebensegmentanzeige ansteuern (adresse, messwert)
 void fct7SegWrite(uint8_t adresse, float messwertaktuell)
@@ -36,19 +36,19 @@ void fct7SegWrite(uint8_t adresse, float messwertaktuell)
 
     // Display setzen
     lc.setChar(adresse, 7, z3, false);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
     lc.setChar(adresse, 6, z2, true);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
     lc.setChar(adresse, 5, z1, false);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
     lc.setChar(adresse, 4, z0, false);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
     lc.setChar(adresse, 3, 'x', false);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
     lc.setChar(adresse, 2, 'o', false);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
     lc.setChar(adresse, 1, 'C', false);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
 }
 void fct7SegAktiv(int adresse, boolean ein)
 {
@@ -60,15 +60,15 @@ void fct7SegAktiv(int adresse, boolean ein)
     {
         lc.shutdown(adresse, true);
     }
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
 }
 void fct7SegHelligkeit(int adresse, int wert)
 {
     lc.setIntensity(adresse, wert);
-    delay(displaydelaytime);
+    delay(confled.DISPLAYTIME);
 }
 void fct7SegLeeren(int adresse)
 {
     lc.clearDisplay(adresse);
-        delay(displaydelaytime);
+        delay(confled.DISPLAYTIME);
 }

@@ -22,9 +22,6 @@ void fctLedOnboard(boolean schalten)
 // ## Rückgabe 0, wenn auf Handbetrieb geschaltet wurde
 int8_t fctAutomatikbetrieb()
 {
-  Serial.println(".---------------------------------");
-  Serial.println("... Automatik gewählt");
-
   int messwertzahl = 0;
   // Siebensegment *my7seg = new Siebensegment(); // neues Objekt my7seg
   // my7seg->aktivieren(0, 1);                    // Methode start aufrufen
@@ -33,9 +30,9 @@ int8_t fctAutomatikbetrieb()
   do
   { // Automatikbetrieb
     delay(prellzeit);
-    //Serial.println("LDR und Poti:");
-    //Serial.println(fctLdrLesen());
-    //Serial.println(fctPotiLesen());
+    // Serial.println("LDR und Poti:");
+    // Serial.println(fctLdrLesen());
+    // Serial.println(fctPotiLesen());
 
     tempAktuell = fctSensorenLesen(0);
 
@@ -43,7 +40,6 @@ int8_t fctAutomatikbetrieb()
     { // Wenn im Automatikbetrieb S1  gedrückt ist,
       // wird das Display Stromsparmodus angesteuert.
       Serial.println("LCD einschalten ");
-      fctLcdText("Temperatur...", 0, 0);
       lcdText = "Temp: ";
       lcdText = lcdText + fctFloatString(tempAktuell, 3);
       fctLcdText(lcdText, 0, 0);
@@ -56,22 +52,20 @@ int8_t fctAutomatikbetrieb()
       fct7SegWrite(0, tempAktuell);
       // fct7SegAktiv(0, false);
       delay(2000);
-
-
-        //werthelligkeit = (fctLdrLesen());
-        Serial.println("LDR: " + werthelligkeit);
-        lcdText = "Helligkeit: ";
-        lcdText = lcdText + fctFloatString(werthelligkeit, 3);
-        fctLcdText(lcdText, 0, 0);
+      /*Serial.println("LDR AD lesen");
+      werthelligkeit = (fctLdrLesen());
+      Serial.println("LDR: " + werthelligkeit);
+      lcdText = "Helligkeit: ";
+      lcdText = lcdText + fctFloatString(werthelligkeit, 3);
+      fctLcdText(lcdText, 0, 0);
 
       delay(2000);
-
-
-        wertwiderstand = (fctPotiLesen());
-        Serial.println("Wid:: " + wertwiderstand);
-        lcdText = "Wid: ";
-        lcdText = lcdText + fctFloatString(wertwiderstand, 3);
-        fctLcdText(lcdText, 0, 0);
+      Serial.println("Poti AD lesen");
+      wertwiderstand = (fctPotiLesen());
+      Serial.println("Wid:: " + wertwiderstand);
+      lcdText = "Wid: ";
+      lcdText = lcdText + fctFloatString(wertwiderstand, 3);
+      fctLcdText(lcdText, 0, 0);*/
 
 
       /*_-----------------------------------------------------
@@ -192,14 +186,15 @@ void setup()
 {
   Serial.begin(115200); // Serieller Monitor Start
   Serial.println("--- void setup() Start ---");
-  Serial.println("//\n// Start oneWireSearch \n//");
 
-  for (uint8_t pin = startPin; pin <= endPin; pin++)
-  {
-    fctFindOneWireDevices(pin);
-  }
-  Serial.println("\n//\n// End oneWireSearch \n//");
-
+    Serial.println("//\n// Start oneWireSearch \n//");
+    for (uint8_t pin = startPin; pin <= endPin; pin++)
+    {
+      fctFindOneWireDevices(pin);
+    }
+    Serial.println("\n//\n// End oneWireSearch \n//");
+ 
+  
   // Ausgänge und Eingänge festlegen
   fctMotorpins();
   pinMode(SCHALTER, INPUT_PULLUP);
@@ -212,7 +207,7 @@ void setup()
 
   // Dallas Temperatursensor init
   fctOneWireSensorsStart();
-  // sensors.begin();
+
   Serial.println("--- Einschaltphase Start ---");
   // Fenster 1 aufmachen
   fctMotor(1, 1, motordauerAuf);
@@ -229,8 +224,8 @@ void setup()
 
 void loop()
 {
-  Serial.println("--- void loop()  Start---");
-  Serial.println("--- Betrieb Start ---");
+  //Serial.println("--- void loop()  Start---");
+  //Serial.println("--- Betrieb Start ---");
   s1 = digitalRead(SCHALTER);
   if (s1 == LOW)
   {
@@ -242,5 +237,5 @@ void loop()
     delay(prellzeit);
     fctAutomatikbetrieb();
   }
-  Serial.println("--- void loop() Ende ---");
+  //Serial.println("--- void loop() Ende ---");
 }

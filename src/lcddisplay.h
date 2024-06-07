@@ -3,6 +3,7 @@ struct LCDDisplayConf
 {
     const int COLUMNS = 16;
     const int ROWS = 2;
+
 };
 LCDDisplayConf conflcd;
 
