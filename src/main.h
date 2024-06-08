@@ -44,8 +44,8 @@
 #define S1ZU 25    // Taste
 #define S2AUF 33   // Taste
 #define S2ZU 35    // Taste
-#define AD0_PIN 36 //
-#define AD3_PIN 39
+//#define AD0_PIN 36 ///
+//#define AD3_PIN 39
 
 
 
@@ -110,6 +110,8 @@ boolean flgwiderstand = false;
 int werthelligkeit = 0;
 int wertwiderstand =0;
 
+ 
+
 /*
 ************************************************************
     Funktionsdeklaration
@@ -145,6 +147,9 @@ std::string fctFloatString(float input, int stellen);
 //AD
 int fctLdrLesen();
 int fctPotiLesen();
+
+void fctLcdAn(boolean an);
+void fctLcdHintergrund(boolean an);
 
 
 

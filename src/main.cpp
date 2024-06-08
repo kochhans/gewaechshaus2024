@@ -10,8 +10,9 @@
  *#######################################################
  */
 #include "main.h"
-// #include "Siebensegment.h"
 #include "LedControl.h"
+//#include <LiquidCrystal_I2C.h>
+
 
 // ## Onboard-LED soll leuchten, wenn ein Fenster beliebig bewegt wird
 void fctLedOnboard(boolean schalten)
@@ -38,35 +39,40 @@ int8_t fctAutomatikbetrieb()
 
     if ((displayaktiv == 1))
     { // Wenn im Automatikbetrieb S1  gedrückt ist,
-      // wird das Display Stromsparmodus angesteuert.
-      Serial.println("LCD einschalten ");
-      lcdText = "Temp: ";
-      lcdText = lcdText + fctFloatString(tempAktuell, 3);
-      fctLcdText(lcdText, 0, 0);
-      Serial.println("LED mit Funktionen ");
-      // The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
-      fct7SegAktiv(0, true);
-      // Helligkeit
-      fct7SegHelligkeit(0, 1);
-      // Anzeige mit aktueller Temperatur ansteuern
-      fct7SegWrite(0, tempAktuell);
-      // fct7SegAktiv(0, false);
-      delay(2000);
-      /*Serial.println("LDR AD lesen");
-      werthelligkeit = (fctLdrLesen());
-      Serial.println("LDR: " + werthelligkeit);
-      lcdText = "Helligkeit: ";
-      lcdText = lcdText + fctFloatString(werthelligkeit, 3);
-      fctLcdText(lcdText, 0, 0);
 
-      delay(2000);
-      Serial.println("Poti AD lesen");
-      wertwiderstand = (fctPotiLesen());
-      Serial.println("Wid:: " + wertwiderstand);
-      lcdText = "Wid: ";
-      lcdText = lcdText + fctFloatString(wertwiderstand, 3);
-      fctLcdText(lcdText, 0, 0);*/
 
+      lcdText = "Temp....: ";
+      lcdText = lcdText+fctFloatString(tempAktuell, 3);
+      fctLcdText(lcdText, 0, 0);
+      // ###############################
+      werthelligkeit = fctLdrLesen();
+      lcdText = "Hellgkt.: ";
+      lcdText = lcdText+ fctFloatString(werthelligkeit, 3);
+      fctLcdText(lcdText, 0, 1);
+      
+      wertwiderstand = fctPotiLesen();
+      lcdText = "Poti....: ";
+      lcdText = lcdText+fctFloatString(wertwiderstand, 3);
+      fctLcdText(lcdText, 0, 0);
+      
+      // ###############################
+
+      // #################################
+
+      /*  Serial.println("LDR AD lesen");
+        werthelligkeit = (fctLdrLesen());
+        Serial.println("LDR: " + werthelligkeit);
+        lcdText = "Helligkeit: ";
+        lcdText = lcdText + fctFloatString(werthelligkeit, 3);
+        fctLcdText(lcdText, 0, 0);
+
+        delay(2000);
+        Serial.println("Poti AD lesen");
+        wertwiderstand = (fctPotiLesen());
+        Serial.println("Wid:: " + wertwiderstand);
+        lcdText = "Wid: ";
+        lcdText = lcdText + fctFloatString(wertwiderstand, 3);
+        fctLcdText(lcdText, 0, 0);*/
 
       /*_-----------------------------------------------------
             my7seg->setIntens(0, 1); // Helligkeit einstellen
@@ -81,6 +87,15 @@ int8_t fctAutomatikbetrieb()
             my7seg->setIntens(0, 3); // Helligkeit ändern
             delay(500);
       ------------------------------------------------------------*/
+
+      // The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
+      fct7SegAktiv(0, true);
+      // Helligkeit
+      fct7SegHelligkeit(0, 1);
+      // Anzeige mit aktueller Temperatur ansteuern
+      fct7SegWrite(0, tempAktuell);
+      // fct7SegAktiv(0, false);
+      delay(2000);
     }
     else
     { // Wenn im Automatikbetrieb S1 nicht gedrückt ist,
@@ -186,15 +201,17 @@ void setup()
 {
   Serial.begin(115200); // Serieller Monitor Start
   Serial.println("--- void setup() Start ---");
+  fctLcdAn(true);
+  fctLcdHintergrund(true);
+  fctLcdDelete();
 
-    Serial.println("//\n// Start oneWireSearch \n//");
-    for (uint8_t pin = startPin; pin <= endPin; pin++)
-    {
-      fctFindOneWireDevices(pin);
-    }
-    Serial.println("\n//\n// End oneWireSearch \n//");
- 
-  
+  Serial.println("//\n// Start oneWireSearch \n//");
+  for (uint8_t pin = startPin; pin <= endPin; pin++)
+  {
+    fctFindOneWireDevices(pin);
+  }
+  Serial.println("\n//\n// End oneWireSearch \n//");
+
   // Ausgänge und Eingänge festlegen
   fctMotorpins();
   pinMode(SCHALTER, INPUT_PULLUP);
@@ -202,7 +219,7 @@ void setup()
   pinMode(S1ZU, INPUT_PULLUP);
   pinMode(S2AUF, INPUT_PULLUP);
   pinMode(S2ZU, INPUT_PULLUP);
-  // pinMode(36, INPUT);
+  pinMode(36, INPUT);
   pinMode(39, INPUT);
 
   // Dallas Temperatursensor init
@@ -224,8 +241,8 @@ void setup()
 
 void loop()
 {
-  //Serial.println("--- void loop()  Start---");
-  //Serial.println("--- Betrieb Start ---");
+  // Serial.println("--- void loop()  Start---");
+  // Serial.println("--- Betrieb Start ---");
   s1 = digitalRead(SCHALTER);
   if (s1 == LOW)
   {
@@ -237,5 +254,5 @@ void loop()
     delay(prellzeit);
     fctAutomatikbetrieb();
   }
-  //Serial.println("--- void loop() Ende ---");
+  // Serial.println("--- void loop() Ende ---");
 }
