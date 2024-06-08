@@ -123,6 +123,8 @@ int8_t fctAutomatikbetrieb();
 uint8_t fctHandbetrieb();
 
 
+//Schalter einlesen
+boolean schalteraktion();
 //SPI
 void fctLedOnboard(boolean);
 void fct7SegWrite(uint8_t zustand, float messwertaktuell);
@@ -143,6 +145,7 @@ std::string fctFloatString(float input, int stellen);
 //AD
 int fctLdrLesen();
 int fctPotiLesen();
+
 
 
 #endif
